@@ -10,16 +10,16 @@
 //This assigns the number 10 to the constant integer variable motorPin
 const int motorPin = 10;
 //Basically the same thing
-const int servoPin = 9;
+/*const */int servoPin = 9;
 //The pin that I am going to use for the knob
-const int knobPin = 0;
+/*const*/ int knobPin = 0;
 
 //Creates a servo object from the servo library that
 //has functions that will be used to control the servo
 Servo myservo;
 
 //This creates an empty integer variable that can be changed
-int knobVal;
+int knobVal = 15;
 
 void setup()
 {
@@ -34,15 +34,15 @@ void setup()
   
  // pinMode(knobPin, INPUT);
   
-  analogWrite(motorPin, 254);
-  delay(100);
-  analogWrite(motorPin, 65);
+//  analogWrite(motorPin, 254);
+//  delay(100);
+//  analogWrite(motorPin, 65);
 }
 
 void loop()
 {
   //Runs the servomove function
-//  servomove();
+ // servomove();
   
   //Runs the motorSpeed function
   motorSpeed();
@@ -51,11 +51,15 @@ void loop()
 void servomove()
 {
   //This code is from an arduino example that comes with the arduino SDK.
-  //Thanks to Michal Rinott for this code.
-  knobVal = analogRead(knobPin);            // reads the value of the potentiometer (value between 0 and 1023) 
-  knobVal = map(knobVal, 0, 1023, 0, 179);     // scale it to use it with the servo (value between 1 and 180) 
-  myservo.write(knobVal);                  // sets the servo position according to the scaled value 
+  //Thanks to Michal Rinott for some of this code.
+  int newknobVal = analogRead(knobPin);            // reads the value of the potentiometer (value between 0 and 1023) 
+  newknobVal = map(newknobVal, 0, 1023, 0, 179);     // scale it to use it with the servo (value between 1 and 180) 
+  if (newknobVal==knobVal){
+  }else{
+  myservo.write(knobVal);                  // sets the servo position according to the scaled value   
+  }
   delay(15);                           // waits for the servo to get there (the number is in milliseconds)
+  knobVal=newknobVal;
 }
 
 void motorSpeed()
@@ -64,12 +68,17 @@ void motorSpeed()
   //Sparkfun released this code into the public domain.
   int speedstart = analogRead(knobPin);
   ////This changing of knobVal doesn't affect the one in servomove because it is within a function.
-  int speed1 = map(speedstart, 0, 1023, 65, 254);  //This scales the value from the knob(0-1023) to a range between 0 and 255.
+  //int speed1 = map(speedstart, 65, (1023+65), 65, 255);  //This scales the value from the knob(0-1023) to a range between 0 and 255.
   //That is the range of speeds for the motor.
   //This puts the value (0-255) into the motor, and the speed changes accordingly.
-  analogWrite(motorPin, speed1);
+  //analogWrite(motorPin, speed1);
   //Just a small delay to smooth things out.
- // delay(15);
+  //delay(15);
+  if (speedstart <= 500){
+    digitalWrite(motorPin, LOW);
+  }else{
+    digitalWrite(motorPin, HIGH);
+  }
 }
   
  
